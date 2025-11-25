@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import baseUrl from '../config';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const baseUrl = process.env.REACT_APP_CODESPACE_NAME
-    ? `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev`
-    : 'http://localhost:8000';
   const endpoint = `${baseUrl}/api/users/`;
 
   useEffect(() => {

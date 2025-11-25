@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const endpoint = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api/users/`;
+  const baseUrl = process.env.REACT_APP_CODESPACE_NAME
+    ? `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev`
+    : 'http://localhost:8000';
+  const endpoint = `${baseUrl}/api/users/`;
 
   useEffect(() => {
     console.log('Fetching from:', endpoint);

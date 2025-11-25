@@ -15,17 +15,19 @@ const useApiData = (path) => {
   const endpoint = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api/${path}/`;
 
   useEffect(() => {
-    console.log('Fetching from:', endpoint);
     fetch(endpoint)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(responseData => {
         const results = responseData.results || responseData;
         setData(results);
-        console.log(`Fetched ${path}:`, results);
         setLoading(false);
       })
       .catch(err => {
-        console.error(`Error fetching ${path}:`, err);
         setError(err);
         setLoading(false);
       });

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import useApiData from '../hooks/useApiData';
 
 /**
@@ -61,6 +62,11 @@ const DataTable = ({ title, endpoint }) => {
       </div>
     </div>
   );
+};
+
+DataTable.propTypes = {
+  title: PropTypes.string.isRequired,
+  endpoint: PropTypes.string.isRequired,
 };
 
 export default DataTable;

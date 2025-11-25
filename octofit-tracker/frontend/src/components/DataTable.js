@@ -15,6 +15,17 @@ const DataTable = ({ title, endpoint }) => {
 
   if (error) return <div className="text-center my-5 text-danger">Error loading {title.toLowerCase()}</div>;
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="card shadow mb-4">
+        <div className="card-body">
+          <h2 className="card-title mb-4 text-primary">{title}</h2>
+          <p className="text-muted">No {title.toLowerCase()} found.</p>
+        </div>
+      </div>
+    );
+  }
+
   // Get all unique keys for table headers
   const allKeys = Array.from(
     data.reduce((keys, item) => {

@@ -20,19 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$aerzy(#)6bp-x3kt1mm7+cfe8a!o13f)^si5oh^8lsphly#ss'
+# Use environment variable for SECRET_KEY, with a fallback for development only.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'insecure-development-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 import os
 
-# Dynamically set allowed hosts for Codespace and localhost
-codespace_name = os.environ.get('CODESPACE_NAME')
-allowed_hosts = ['localhost', '127.0.0.1']
-if codespace_name:
-    allowed_hosts.append(f"{codespace_name}-8000.app.github.dev")
-ALLOWED_HOSTS = allowed_hosts
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if os.environ.get('CODESPACE_NAME'):
+    ALLOWED_HOSTS.append(f"{os.environ.get('CODESPACE_NAME')}-8000.app.github.dev")
 
 
 # Application definition
@@ -96,10 +94,24 @@ DATABASES = {
     }
 }
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+# Restrict CORS to trusted origins for security
+codespace_name = os.environ.get('CODESPACE_NAME')
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+if codespace_name:
+    CORS_ALLOWED_ORIGINS.append(f"https://{codespace_name}-3000.app.github.dev")
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
-CORS_ALLOW_METHODS = ['*']
+# Use default allowed headers and methods (safe for most cases)
+# If you need to customize, explicitly list only the required ones:
+# CORS_ALLOW_HEADERS = [
+#     "accept", "accept-encoding", "authorization", "content-type", "dnt",
+#     "origin", "user-agent", "x-csrftoken", "x-requested-with",
+# ]
+# CORS_ALLOW_METHODS = [
+#     "DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT",
+# ]
 
 
 # Password validation

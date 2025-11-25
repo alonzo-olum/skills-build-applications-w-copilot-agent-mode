@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import getApiBaseUrl from '../utils/api';
 
 /**
  * Custom hook for fetching data from API endpoints.
@@ -12,7 +13,7 @@ const useApiData = (path) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const endpoint = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api/${path}/`;
+  const endpoint = `${getApiBaseUrl()}/api/${path}/`;
 
   useEffect(() => {
     fetch(endpoint)

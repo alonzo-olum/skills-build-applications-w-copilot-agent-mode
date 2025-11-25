@@ -4,18 +4,15 @@ import useApiData from './useApiData';
 // Mock the api utility
 jest.mock('../utils/api', () => () => 'http://localhost:8000');
 
-// Store original fetch
-const originalFetch = global.fetch;
-
 describe('useApiData', () => {
   beforeEach(() => {
-    // Reset fetch mock before each test
+    // Create a fresh fetch mock before each test
     global.fetch = jest.fn();
   });
 
   afterEach(() => {
-    // Restore original fetch after each test
-    global.fetch = originalFetch;
+    // Clear all mocks after each test to ensure test isolation
+    jest.restoreAllMocks();
   });
 
   it('should initialize with loading state', () => {
@@ -107,10 +104,13 @@ describe('useApiData', () => {
       json: () => Promise.resolve([])
     });
     
-    renderHook(() => useApiData('leaderboard'));
+    const { result } = renderHook(() => useApiData('leaderboard'));
     
+    // Wait for the hook to complete loading
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/api/leaderboard/');
+      expect(result.current.loading).toBe(false);
     });
+    
+    expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/api/leaderboard/');
   });
 });

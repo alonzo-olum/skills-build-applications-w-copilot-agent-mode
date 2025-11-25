@@ -8,7 +8,11 @@ class ObjectIdField(serializers.Field):
         return str(value) if value else None
 
     def to_internal_value(self, data):
-        return data
+        if data is None:
+            return None
+        if not isinstance(data, (str, int)):
+            raise serializers.ValidationError("Invalid ObjectId format")
+        return str(data)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -21,7 +25,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     id = ObjectIdField(read_only=True)
-    team = ObjectIdField()
+    team = ObjectIdField(read_only=True)
 
     class Meta:
         model = User
@@ -30,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     id = ObjectIdField(read_only=True)
-    user = ObjectIdField()
+    user = ObjectIdField(read_only=True)
 
     class Meta:
         model = Activity
@@ -39,7 +43,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 class WorkoutSerializer(serializers.ModelSerializer):
     id = ObjectIdField(read_only=True)
-    user = ObjectIdField()
+    user = ObjectIdField(read_only=True)
 
     class Meta:
         model = Workout
@@ -48,7 +52,7 @@ class WorkoutSerializer(serializers.ModelSerializer):
 
 class LeaderboardSerializer(serializers.ModelSerializer):
     id = ObjectIdField(read_only=True)
-    team = ObjectIdField()
+    team = ObjectIdField(read_only=True)
 
     class Meta:
         model = Leaderboard

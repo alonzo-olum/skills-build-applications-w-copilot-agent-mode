@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import getApiBaseUrl from '../utils/api';
 
 /**
@@ -13,7 +13,8 @@ const useApiData = (path) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const endpoint = `${getApiBaseUrl()}/api/${path}/`;
+  // Memoize endpoint to prevent unnecessary effect re-runs
+  const endpoint = useMemo(() => `${getApiBaseUrl()}/api/${path}/`, [path]);
 
   useEffect(() => {
     fetch(endpoint)
@@ -32,7 +33,7 @@ const useApiData = (path) => {
         setError(err);
         setLoading(false);
       });
-  }, [endpoint, path]);
+  }, [endpoint]);
 
   return { data, loading, error };
 };
